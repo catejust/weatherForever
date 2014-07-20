@@ -1,14 +1,5 @@
-<?php 
-date_default_timezone_set('America/Toronto');
-// $timestamp=1333699439;
-// echo date("D", $timestamp);
-
-// $weather = array(
-
-// 	'clear-day' => 'images\\'
-
-// 	);
-
+<?php
+    date_default_timezone_set('America/Toronto');
 
     //API query parameters
     $lat = 43.529220;
@@ -29,7 +20,6 @@ date_default_timezone_set('America/Toronto');
     // build query URL
     $queryURL = ("https://api.forecast.io/forecast/" . $authKey . "/" . $lat . "," . $long . "?units=" . $units);
 
-    //echo $queryURL . "\n" . "\n";
 
     // call getJsonForecast function to set $forecast as associate array
 
@@ -52,32 +42,36 @@ date_default_timezone_set('America/Toronto');
         return ("Today has " . round(abs($diff/60),1) . ($diff < 0 ? " more minutes" : " fewer minutes") . " of daylight than tomorrow." );
     }
 
-//	// $currentTempIcon = "images/clear-night-1.png";
-    	$currentTempIcon = strtolower("images/" . $forecast[currently][icon]); //gives images/partly-cloudy-day
-        echo $currentTempIcon . "<br />";
 
 
-        // adding in the "images/" part was unconditionally adding 7 characters to every icon, forcing it to always use the 'else' condition :P
-    	if (strlen($currentTempIcon) <=13) {
 
-            // logic was reversed here -- if current time is less than sunrise time or current time is greater than sunset time
-    		if ($forecast[currently][time] > $forecast[daily][data][0][sunriseTime] && $forecast[currently][time] < $forecast[daily][data][0][sunsetTime]) {
-
-    			$currentTempIcon = $currentTempIcon . "-day" . "-1".'.png'; //adds -day-1.png
-
-    		} else {
-    			$currentTempIcon = $currentTempIcon . "-night" . "-1".'.png'; //adds -night-1.png
-    		}
+    // return URI images/currentIcon from API "currently"
+    $currentTempIcon = strtolower("images/" . $forecast[currently][icon]); //gives images/partly-cloudy-day
+    echo $currentTempIcon . "<br />"; //debug only print temp icon
 
 
-    	} else {
+    // adding in the "images/" part was unconditionally adding 7 characters to every icon, forcing it to always use the 'else' condition :P
+    if (strlen($currentTempIcon) <=13) {
 
-    		$currentTempIcon = $currentTempIcon . "-1". '.png'; //only adds -1.png
-    	}
+        // logic was reversed here -- if current time is less than sunrise time or current time is greater than sunset time, the old log was for finding nighttime
+        // but the code was setting "day" if true
+        if ($forecast[currently][time] > $forecast[daily][data][0][sunriseTime] && $forecast[currently][time] < $forecast[daily][data][0][sunsetTime]) {
+
+            $currentTempIcon = $currentTempIcon . "-day" . "-1".'.png'; //adds -day-1.png
+
+        } else {
+            $currentTempIcon = $currentTempIcon . "-night" . "-1".'.png'; //adds -night-1.png
+        }
+
+
+    } else {
+
+        $currentTempIcon = $currentTempIcon . "-1". '.png'; //only adds -1.png
+    }
 //
 //
 //
-		echo $currentTempIcon;
+echo $currentTempIcon;
 //
 //    	echo count($forecast[daily][data]);
 //
@@ -86,47 +80,13 @@ date_default_timezone_set('America/Toronto');
 //    	}
 
 
+
+    // create array of forecasts for the weekly chart
     $weekdayForecasts = array();
-/*	$weekdayForecasts[0] = array(
-	    "day" => "Tmrw",
-	    "icon" => "images/" . $forecast[daily][data][0][icon]. "-1" . ".png",
-	    "temperatureMax" => $forecast[daily][data][0][temperatureMax],
-	    "temperatureMin" => $forecast[daily][data][0][temperatureMin],
-	    "summary" => $forecast[daily][data][0][summary]
-
-	);
-	$weekdayForecasts[1] = array(
-	    "day" => date('D',time()+172800),
-	    "icon" => "images/" . $forecast[daily][data][1][icon]. "-1" . ".png",
-	    "temperatureMax" => $forecast[daily][data][1][temperatureMax],
-	    "temperatureMin" => $forecast[daily][data][1][temperatureMin],
-	    "summary" => $forecast[daily][data][1][summary] 
-	);
-	$weekdayForecasts[2] = array(
-	    "day" => date('D',time()+259200),
-	    "icon" => "images/" . $forecast[daily][data][2][icon]. "-1" . ".png",
-	    "temperatureMax" => $forecast[daily][data][2][temperatureMax],
-	    "temperatureMin" => $forecast[daily][data][2][temperatureMin],
-	    "summary" => $forecast[daily][data][0][summary] 
-	);
-	$weekdayForecasts[3] = array(
-	    "day" => date('D',time()+345600),
-	    "icon" => "images/" . $forecast[daily][data][3][icon]. "-1" . ".png",
-	    "temperatureMax" => $forecast[daily][data][3][temperatureMax],
-	    "temperatureMin" => $forecast[daily][data][3][temperatureMin],
-	    "summary" => $forecast[daily][data][0][summary] 
-	);
-	$weekdayForecasts[4] = array(
-	    "day" => date('D',time()+432000),
-	    "icon" => "images/" . $forecast[daily][data][4][icon]. "-1" . ".png",    
-	    "temperatureMax" => $forecast[daily][data][4][temperatureMax],
-	    "temperatureMin" => $forecast[daily][data][4][temperatureMin],
-	    "summary" => $forecast[daily][data][0][summary] 
-	);*/
-
     for ($i=1; $i<6; $i++)
     {
         $weekdayForecasts[$i] = array(
+            // if first iteration, use "Tmrw", else pull word day from unix timestamp of max temperature time for given day
             "day" => ($i == 1 ? "Tmrw" : date('D',$forecast[daily][data][$i][temperatureMaxTime]) ),
             "icon" => "images/" . $forecast[daily][data][$i][icon]. "-1" . ".png",
             "temperatureMax" => $forecast[daily][data][$i][temperatureMax],
@@ -234,27 +194,15 @@ date_default_timezone_set('America/Toronto');
 		
 
 
+        <?php  for ($i = 1; $i < 5; $i++)
+                {
+                    echo "\n    var day" . $i . "Temp = \"" . $weekdayForecasts[$i]["icon"] . "\";\n";
+                    echo "  var day" . $i . "Icon = new AnimatedPNG('day" . $i . "' ,  day" . $i .  "Temp, 2, 50);\n";
+                    echo "  day" . $i . "Icon.draw(false);\n";
 
+                }
+        ?>
 
-		var tmrwTemp = "<?php echo $weekdayForecasts[0]["icon"]; ?>";
-		var tmrwIcon = new AnimatedPNG('tmrw', tmrwTemp, 2, 50);
-		tmrwIcon.draw(false);
-
-		var dayTwoTemp = "<?php echo $weekdayForecasts[1]["icon"]; ?>";
-		var dayTwoIcon = new AnimatedPNG('tmrw', dayTwoTemp, 2, 50);
-		dayTwoIcon.draw(false);
-
-		var dayThreeTemp = "<?php echo $weekdayForecasts[2]["icon"]; ?>";
-		var dayThreeIcon = new AnimatedPNG('tmrw', dayThreeTemp, 2, 50);
-		dayThreeIcon .draw(false);
-
-		var dayFourTemp = "<?php echo $weekdayForecasts[3]["icon"]; ?>";
-		var dayFourIcon = new AnimatedPNG('tmrw', dayFourTemp, 2, 50);
-		dayFourIcon.draw(false);
-
-		var dayFiveTemp = "<?php echo $weekdayForecasts[4]["icon"]; ?>";
-		var dayFiveIcon = new AnimatedPNG('tmrw', dayFiveTemp, 2, 50);
-		dayFiveIcon.draw(false);
 
 
 

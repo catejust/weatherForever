@@ -1,0 +1,92 @@
+<?php 
+
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather Forever</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:300,600|Roboto+Condensed:400,300|Roboto:200' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<nav>
+	<div class="container">
+
+		<form method="get" action="/search" id="search">
+		  <input name="q" type="text" size="40" placeholder="search..." />
+		</form>
+
+
+		<div class="onoffswitch">
+		    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+		    <label class="onoffswitch-label" for="myonoffswitch">
+		        <span class="onoffswitch-inner"></span>
+		        <span class="onoffswitch-switch"></span>
+		    </label>
+		</div>
+
+		<aside id="todays-date">
+			<h3>MISSISSAUGA, ON</h3>
+			<h3>13 JULY '14</h3>
+		</aside>
+	</div>
+</nav>
+
+
+<section id="daily-forecast">
+	<div class="container">
+		<p id="right-now">RIGHT NOW</p>
+		<h2 id="weather-condition">Partly Cloudy</h2>
+		<div class="main-weather-icon"></div>
+		<h1 id="daily-temp">25<sup class="sup-celcius">&deg;C</sup></h1>
+		<div class="summary-container">
+			<article id="daily-summary">Rain until afternoon, starting again in the evening.</article>
+	</div>
+</section>
+
+<section id="current-temp-time">
+	<div class-"container">
+		<h3><b>Feels like 30&deg;C</b></h3>
+		<h3>Today is 3 minutes shorter than yesterday</h3>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+
+		<ul id="week-forecast">
+			<li>
+				<h3></h3>
+			</li>
+
+			<li>
+				<h3><?php echo date('D'); ?></h3>
+			</li>
+
+			<li>
+				<h3>DAY</h3>
+			</li>
+
+			<li>
+				<h3>DAY</h3>
+			</li>
+
+			<li>
+				<h3>DAY</h3>
+			</li>
+		</ul>
+
+
+
+	</div>
+</section>
+
+
+
+</body>
+</html>

@@ -9,6 +9,7 @@ weatherForever
 ver 1.1.3
 
 - added png sequence for all weather icons
-- changed for loop to add individual id's to <img> tags
-- added conditional for weather icon filename extensions, to display the correct day/night icon
+- added individual id's to <img> tags in for loop 
+- added a conditional for weather icon filename extensions, to display the correct day/night icon
    ** need to confirm if it's working properly **
+- changed the $currentTempIcon conditional so it doesn't add extra characters

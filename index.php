@@ -42,8 +42,18 @@
         return ("Today has " . round(abs($diff/60),1) . ($diff < 0 ? " more minutes" : " fewer minutes") . " of daylight than tomorrow." );
     }
 
+<<<<<<< HEAD
 
 
+=======
+//	// $currentTempIcon = "images/clear-night-1.png";
+    $currentTempIcon = strtolower($forecast[currently][icon]); //gives images/partly-cloudy-day
+        
+
+
+        // adding in the "images/" part was unconditionally adding 7 characters to every icon, forcing it to always use the 'else' condition :P
+    	if (strlen($currentTempIcon) <= 6) {
+>>>>>>> FETCH_HEAD
 
     // return URI images/currentIcon from API "currently"
     $currentTempIcon = strtolower("images/" . $forecast[currently][icon]); //gives images/partly-cloudy-day
@@ -57,22 +67,45 @@
         // but the code was setting "day" if true
         if ($forecast[currently][time] > $forecast[daily][data][0][sunriseTime] && $forecast[currently][time] < $forecast[daily][data][0][sunsetTime]) {
 
+<<<<<<< HEAD
             $currentTempIcon = $currentTempIcon . "-day" . "-1".'.png'; //adds -day-1.png
 
         } else {
             $currentTempIcon = $currentTempIcon . "-night" . "-1".'.png'; //adds -night-1.png
         }
+=======
+    			$currentTempIcon = "images/" . $currentTempIcon . "-day" . "_1".'.png'; //adds -day-1.png
+
+    		} else {
+    			$currentTempIcon = "images/" . $currentTempIcon . "-night" . "_1".'.png'; //adds -night-1.png
+    		}
+>>>>>>> FETCH_HEAD
 
 
     } else {
 
+<<<<<<< HEAD
         $currentTempIcon = $currentTempIcon . "-1". '.png'; //only adds -1.png
     }
+=======
+    		$currentTempIcon = "images/" . $currentTempIcon . "_1". '.png'; //only adds -1.png
+    	}
+>>>>>>> FETCH_HEAD
+//
+
+
+    
 //
 //
-//
+<<<<<<< HEAD
 echo $currentTempIcon;
 //
+=======
+		// echo $currentTempIcon;
+//		echo $weekdayForecasts[1][icon];
+
+
+>>>>>>> FETCH_HEAD
 //    	echo count($forecast[daily][data]);
 //
 //    	for ($i=0; $i<=4; $i++) {
@@ -84,16 +117,49 @@ echo $currentTempIcon;
     // create array of forecasts for the weekly chart
     $weekdayForecasts = array();
     for ($i=1; $i<6; $i++)
+
     {
+
+    	$weeklyTempIcon = strtolower( $forecast[daily][data][$i][icon]); //gives images/partly-cloudy-day
+        
+
+
+        // adding in the "images/" part was unconditionally adding 7 characters to every icon, forcing it to always use the 'else' condition :P
+    	if (strlen($weeklyTempIcon) <= 6) {
+
+            // logic was reversed here -- if current time is less than sunrise time or current time is greater than sunset time
+    		if ($forecast[daily][data][$i][sunriseTime] > $forecast[currently][time] && $forecast[currently][time] < $forecast[daily][data][$i][sunsetTime]) {
+
+    			$weeklyTempIcon = "images/" . $weeklyTempIcon . "-day" . "_1".'.png'; //adds -day-1.png
+
+    		} else {
+    			$weeklyTempIcon = "images/" . $weeklyTempIcon . "-night" . "_1".'.png'; //adds -night-1.png
+    		}
+
+
+    	} else {
+
+    		$weeklyTempIcon = "images/" . $weeklyTempIcon . "_1". '.png'; //only adds -1.png
+    	}
+
+
         $weekdayForecasts[$i] = array(
+<<<<<<< HEAD
             // if first iteration, use "Tmrw", else pull word day from unix timestamp of max temperature time for given day
             "day" => ($i == 1 ? "Tmrw" : date('D',$forecast[daily][data][$i][temperatureMaxTime]) ),
             "icon" => "images/" . $forecast[daily][data][$i][icon]. "-1" . ".png",
+=======
+            "day" => ($i == 1 ? "tmrw" : date('D',$forecast[daily][data][$i][temperatureMaxTime]) ),
+            "id" => "day" . $i . "Icon",
+            "icon" => $weeklyTempIcon ,
+>>>>>>> FETCH_HEAD
             "temperatureMax" => $forecast[daily][data][$i][temperatureMax],
             "temperatureMin" => $forecast[daily][data][$i][temperatureMin],
             "summary" => $forecast[daily][data][$i][summary]
         );
     }
+
+  
 
 
 
@@ -113,6 +179,7 @@ echo $currentTempIcon;
 
 </head>
 <body>
+
 
 <nav>
 	<div class="container">
@@ -143,7 +210,9 @@ echo $currentTempIcon;
 		 <!-- echo "images\/" . $currentTempIcon; -->
 		
 		<h2 id="weather-condition"><?php echo strtolower($forecast[currently][summary]); ?></h2>
-		<img  id="tmrw" class="main-weather-icon">
+		<img id="current" class="main-weather-icon">
+
+
 		<h1 id="daily-temp"><?php echo round($forecast[currently][temperature],1); ?><sup class="sup-celcius">&deg;C</sup></h1>
 		<div class="summary-container">
 			<p id="right-now">RIGHT NOW</p>
@@ -166,7 +235,7 @@ echo $currentTempIcon;
 				<?php foreach($weekdayForecasts as $weekdayForecast){ 
 						echo '<li>';
 							echo '<h3 class="weekdays">'. strtoupper($weekdayForecast["day"]) .'</h3>';
-							echo '<img src="' . $weekdayForecast["icon"] .'"  class="small-weather-icon" >';
+							echo '<img  id="'. $weekdayForecast["id"]  .'" class="small-weather-icon">';
 							echo '<h2>'. round($weekdayForecast["temperatureMax"],0);
 								echo '<sup class="p-style">' . "&deg;" . '</sup>';
 							echo '</h2>';
@@ -181,6 +250,8 @@ echo $currentTempIcon;
 		</ul>	
 
 
+
+
 	</div>
 </section>
 
@@ -189,10 +260,11 @@ echo $currentTempIcon;
 	<script type="text/javascript">
 
 		var currentTemp = "<?php echo $currentTempIcon; ?>"; //takes $currentTempIcon value which is filename-1.png
-		var clearNight = new AnimatedPNG('tmrw', currentTemp, 2, 50); //insert currentTemp as arg
+		var clearNight = new AnimatedPNG('current', currentTemp, 59, 50); //insert currentTemp as source argument, insert 'tmrw' as id argument
 		clearNight.draw(false);
 		
 
+<<<<<<< HEAD
 
         <?php  for ($i = 1; $i < 5; $i++)
                 {
@@ -203,12 +275,32 @@ echo $currentTempIcon;
                 }
         ?>
 
+=======
+		var tmrwTemp = "<?php echo $weekdayForecasts[1][icon]; ?>"; 
+			//This works, when used without quotations. Also only recognizes index # using the array index weekdayForecasts[i], and not weekdayForecast[i]
+		var tmrwIcon = new AnimatedPNG('day1Icon', tmrwTemp, 59, 50);
+		tmrwIcon.draw(false);
 
 
+		var dayTwoTemp = "<?php echo $weekdayForecasts[2][icon]; ?>";
+		var dayTwoIcon = new AnimatedPNG('day2Icon', dayTwoTemp, 59, 50);
+		dayTwoIcon.draw(false);
+
+		var dayThreeTemp = "<?php echo $weekdayForecasts[3][icon]; ?>";
+		var dayThreeIcon = new AnimatedPNG('day3Icon', dayThreeTemp, 59, 50);
+		dayThreeIcon.draw(false);
+
+		var dayFourTemp = "<?php echo $weekdayForecasts[4][icon]; ?>";
+		var dayFourIcon = new AnimatedPNG('day4Icon', dayFourTemp, 59, 50);
+		dayFourIcon.draw(false);
+
+		var dayFiveTemp = "<?php echo $weekdayForecasts[5][icon]; ?>";
+		var dayFiveIcon = new AnimatedPNG('day5Icon', dayFiveTemp, 59, 50);
+		dayFiveIcon.draw(false);
+>>>>>>> FETCH_HEAD
 
 	</script>
 
 </body>
-
 
 </html>
